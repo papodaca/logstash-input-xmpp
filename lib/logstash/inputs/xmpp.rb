@@ -30,6 +30,8 @@ class LogStash::Inputs::Xmpp < LogStash::Inputs::Base
   # the host on the user/identity is used. (`foo.com` for `user@foo.com`)
   config :host, :validate => :string
 
+  config :port, :validate => :number
+
   public
 
   def initialize(config)
@@ -43,7 +45,7 @@ class LogStash::Inputs::Xmpp < LogStash::Inputs::Base
 
   def register
     Jabber::debug = true if @logger.debug?
-    client.connect(@host) # it is ok if host is nil
+    client.connect(@host, @port) # it is ok if host is nil
     client.auth(@password.value)
     client.send(Jabber::Presence.new.set_type(:available))
   end # def register
